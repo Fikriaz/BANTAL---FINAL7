@@ -37,7 +37,7 @@ import javafx.scene.layout.Pane;
 public class FXMLDashboardTenagaAhliController implements Initializable {
 
    @FXML
-    private BarChart lcKunjungan;
+    private LineChart lcKunjungan;
     
     @FXML
     private Label namaUser;

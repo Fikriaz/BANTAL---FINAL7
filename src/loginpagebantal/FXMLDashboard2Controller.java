@@ -33,26 +33,7 @@ import javafx.scene.layout.Pane;
  */
 public class FXMLDashboard2Controller implements Initializable {
 
-//     @FXML
-//    private LineChart lcKunjungan;
-//
-//    @FXML
-//    private TableView<Konsultasi> TableKonsultasi;
-//
-//    @FXML
-//    private TableColumn<Konsultasi, String> Alamat;
-//
-//    @FXML
-//    private TableColumn<Konsultasi, String> Tanggalhari;
-//
-//    @FXML
-//    private TableColumn<Konsultasi, String> tcwaktu;
-//
-//    @FXML
-//    private TableColumn<Konsultasi, String> tatapmuka;
-//
-//    @FXML
-//    private TableColumn<Konsultasi, String> Keluhan;
+
     
        @FXML
     private TableColumn<Konsultasi, String> Alamat;
@@ -76,11 +57,18 @@ public class FXMLDashboard2Controller implements Initializable {
     private TableColumn<Konsultasi, String> tcwaktu;
 
     OpenScene bukaScene = new OpenScene();
+    java.util.ArrayList< DaftarTenagaAhli > listpendaftarantnahli = new java.util.ArrayList <DaftarTenagaAhli> ();
+   
+    XStream xstream = new XStream(new StaxDriver());
+    Indeks ind;
+    Konsultasi k;
+    DaftarTenagaAhli a ;
+    
     ArrayList<Konsultasi> listKon = new ArrayList<Konsultasi>();
     XYChart.Series dataa = new XYChart.Series<>();
     ObservableList datakonsultasi = observableArrayList();
-    XStream xstream = new XStream(new StaxDriver());
-
+    
+    private int kunjungan = 0;
 
     @FXML
     private void hapusButton(ActionEvent event) {
@@ -135,22 +123,16 @@ public class FXMLDashboard2Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        dataa.getData().add(new XYChart.Data("26 juni", 100));
-        dataa.getData().add(new XYChart.Data("27 juni", 250));
-        dataa.getData().add(new XYChart.Data("29 juni", 450));
-        dataa.getData().add(new XYChart.Data("28 juni", 210));
-        dataa.getData().add(new XYChart.Data("29 juni", 150));
-        dataa.getData().add(new XYChart.Data("30 juni", 450));
-        dataa.getData().add(new XYChart.Data("31 juni", 280));
-        lcKunjungan.getData().addAll(dataa);
-        Alamat.setCellValueFactory(new PropertyValueFactory<>("Alamat"));
+        
+         
+        OpenData();
+        simpanData(); 
+       Alamat.setCellValueFactory(new PropertyValueFactory<>("Alamat"));
         Keluhan.setCellValueFactory(new PropertyValueFactory<>("Keluhan"));
         tatapmuka.setCellValueFactory(new PropertyValueFactory<>("tatapmuka"));
         tcwaktu.setCellValueFactory(new PropertyValueFactory<>("Waktu"));
         Tanggalhari.setCellValueFactory(new PropertyValueFactory<>("Tanggalhari"));
-
-        OpenData();
-        simpanData();
+ 
         File f = new File("ListKonsultasi.xml");
         if (f.exists() && !f.isDirectory()) {
             OpenData();
@@ -162,6 +144,13 @@ public class FXMLDashboard2Controller implements Initializable {
             System.out.println(listKon.toString());
         }
         TableKonsultasi.setItems(datakonsultasi);
+        dataa.setName("Konsultasi Pasien");
+        for (int i = 0; i < listKon.size(); i++) {
+            k = (Konsultasi) listKon.get(i);
+            kunjungan++;
+            dataa.getData().add(new XYChart.Data(k.getTanggalhari(), kunjungan));
+        }
+        lcKunjungan.getData().addAll(dataa);
     }
 
     
